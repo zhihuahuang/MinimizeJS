@@ -1,5 +1,34 @@
 (function(){
     var u = window.utils = {
+        // 类型判断
+        function isString(value) {
+            return toString.apply(value) === '[object String]';
+        }
+
+        function isNumber(value) {
+            return toString.apply(value) === '[object Number]';
+        }
+
+        function isBoolean(value) {
+            return toString.apply(value) === '[object Boolean]';
+        }
+
+        function isObject(value) {
+            return toString.apply(value) === '[object Object]';
+        }
+
+        function isArray(value) {
+            return toString.apply(value) === '[object Array]';
+        }
+
+        function isFunction(value) {
+            return toString.apply(value) === '[object Function]';
+        }
+
+        function isNull(value) {
+            return value == null;
+        }
+        
         /**
         * size(obj, proto)
         *     检测对象的属性个数
