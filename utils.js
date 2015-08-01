@@ -2,27 +2,31 @@
     var u = window.utils = {
         // 类型判断
         function isString(value) {
-            return toString.apply(value) === '[object String]';
+            return toString.apply(value) === "[object String]";
         }
 
         function isNumber(value) {
-            return toString.apply(value) === '[object Number]';
+            return toString.apply(value) === "[object Number]";
         }
 
         function isBoolean(value) {
-            return toString.apply(value) === '[object Boolean]';
+            return toString.apply(value) === "[object Boolean]";
         }
 
         function isObject(value) {
-            return toString.apply(value) === '[object Object]';
+            return toString.apply(value) === "[object Object]";
         }
 
         function isArray(value) {
-            return toString.apply(value) === '[object Array]';
+            return toString.apply(value) === "[object Array]";
         }
 
         function isFunction(value) {
-            return toString.apply(value) === '[object Function]';
+            return toString.apply(value) === "[object Function]";
+        }
+    
+        function isRegExp(value) {
+            return toString.apply(value) === "[object RegExp]";
         }
 
         function isNull(value) {
