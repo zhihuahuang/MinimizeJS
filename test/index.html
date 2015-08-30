@@ -7,7 +7,7 @@
 <body>
     <h1 data-attr="minijs">MiniJS</h1>
     <h2>Welcome to use MiniJS</h2>
-    <script src="target.js"></script>
+    <script src="target.min.js"></script>
     <script>
         console.dir($);
         console.log(document.getElementsByTagName('h1'));
@@ -19,6 +19,10 @@
         }).attr('data-attr', 'hello');
         
         console.log($h1.attr('data-attr'));
+        
+        console.log($h1.is('h1'));
+        
+        
     </script>
 </body>
 </html>
