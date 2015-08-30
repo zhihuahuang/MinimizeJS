@@ -1,10 +1,8 @@
-// require('$');
+// require('$', 'url');
 
 /**
  * 获取URL参数
  */
-
-if(!$.url) $.url = {};
 
 $.url.params = function (key, defaultValue) {
     if (arguments.length == 0) {

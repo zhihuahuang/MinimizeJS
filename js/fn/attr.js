@@ -1,4 +1,4 @@
-// reuqire('$', 'each', 'fn.init');
+// require('$', 'each', 'fn.init');
 
 $.fn.attr = function(attribute, value){
     if($.isString(attribute)) {
@@ -13,9 +13,10 @@ $.fn.attr = function(attribute, value){
     }
     
     $.each(this, function(){
+        var i;
         for(i in attribute) {
             this.setAttribute(i, attribute[i]);
         }
-    });
+    })
     return this;
 }

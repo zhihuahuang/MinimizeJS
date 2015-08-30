@@ -1,4 +1,4 @@
-// require('$');
+// require('$', 'url');
 
 /**
  * openURL(obj)
@@ -16,8 +16,6 @@
  *          }
  *
  */
-
-if(!$.url) $.url = {};
 
 $.url.open = function(arg) {
     if (!arg.url) {

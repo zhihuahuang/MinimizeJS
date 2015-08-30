@@ -1,11 +1,13 @@
 // require('$', 'isString', 'isElement', 'map');
 
+$.fn = {};
+
 $.fn.init = function(selector, context){
     var $object = [];
     
     // 字符串 则调用选择器
     if($.isString(selector)){ 
-        selector = (context || document).querySelectorAll(selector);
+        selector = (context || D).querySelectorAll(selector);
         
     }
     
@@ -20,5 +22,5 @@ $.fn.init = function(selector, context){
     
     $object.__proto__ = $.fn;
 
-    return $object
+    return $object;
 }
