@@ -1,17 +1,18 @@
 var fs = require('fs');
+var exec = require('child_process').exec;
 var argv = process.argv;
 
 var requireList = [];
 var requireMap = {};
 
-var outFile = 'out.js';
+var outFile = 'out';
 
 /*
 * 构造加载模块列表
 */
 var match = /^(.*)\.json$/.exec(argv[2]); // 判断是不是JSON文件
 if(match) {
-    outFile = match[1]+'.js';
+    outFile = match[1];
     requireList = eval(fs.readFileSync(argv[2], 'utf8'));
 }
 else {
@@ -25,10 +26,11 @@ else {
 var load = function(path){
     var data = fs.readFileSync(path, 'utf8');
     var match = /require\((.*)\)/.exec(data);
-
+    var i;
+    
     if(match) {
         var list = eval('[' + match[1] + ']');
-
+        
         for(i in list) {
             var moduleJS = 'js/' + list[i].replace('.', '/') + '.js';
             if(!requireMap[moduleJS]) {
@@ -39,7 +41,9 @@ var load = function(path){
     requireMap[path] = data;
 }
 
-for(var i=0; i<requireList.length; ++i){
+//console.log(requireList.length);
+
+for(var i=0; i<requireList.length; i++){
     load(requireList[i]);
 }
 
@@ -60,4 +64,6 @@ var jsText = [];
 for(i in requireMap){
     jsText.push(requireMap[i]);
 }
-fs.writeFileSync(outFile, '(function(){\n' + jsText.join('\n\n') + '\n}())', 'utf8');
+fs.writeFileSync(outFile+'.js', '(function(){\n' + jsText.join('\n\n') + '\n}())', 'utf8');
+
+exec('node node_modules/uglify-js/bin/uglifyjs ' + outFile + '.js -m -o ' + outFile + '.min.js');
