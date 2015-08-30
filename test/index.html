@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MiniJS</title>
+</head>
+<body>
+    <h1 data-attr="minijs">MiniJS</h1>
+    <h2>Welcome to use MiniJS</h2>
+    <script src="target.js"></script>
+    <script>
+        console.dir($);
+        console.log(document.getElementsByTagName('h1'));
+        var $h1 = $(document.getElementsByTagName('h1')).on('click', function(){
+            alert("Hello");
+        });
+        $('h2').on('click', function(){
+            alert("Hello");
+        }).attr('data-attr', 'hello');
+        
+        console.log($h1.attr('data-attr'));
+    </script>
+</body>
+</html>
