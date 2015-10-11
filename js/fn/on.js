@@ -1,7 +1,7 @@
 // require('$', 'each', 'fn.init');
 
 $.fn.on = function(type, listener, useCapture){
-    if($.isString) {
+    if($.isString(type)) {
         var temp = {};
         temp[type] = listener;
         type = temp;

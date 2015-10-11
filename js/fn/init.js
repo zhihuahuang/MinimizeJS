@@ -7,7 +7,7 @@ $.fn.init = function(selector, context){
     
     // 字符串 则调用选择器
     if($.isString(selector)){ 
-        selector = (context || D).querySelectorAll(selector);
+        selector = (context || document).querySelectorAll(selector);
         
     }
     
