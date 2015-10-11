@@ -10,22 +10,32 @@ var outFile = 'out';
 /*
 * 构造加载模块列表
 */
-var match = /^(.*)\.json$/.exec(argv[2]); // 判断是不是JSON文件
-if(match) {
-    outFile = match[1];
-    requireList = eval(fs.readFileSync(argv[2], 'utf8'));
-}
-else {
-    requireList = [argv[2]];
+//var match = /^(.*)\.json$/.exec(argv[2]); // 判断是不是JSON文件
+//if(match) {
+//    outFile = match[1];
+//    requireList = eval(fs.readFileSync(argv[2], 'utf8'));
+//}
+//else {
+//    requireList = [argv[2]];
+//}
+
+function parseModules(str) {
+    var match = /^(.*)\.json$/.exec(str); // 判断是不是JSON文件
+    if(match) {
+        outFile = match[1];
+        return eval(fs.readFileSync(str, 'utf8'));
+    }
+    else {
+        return [str];
+    }
 }
 
 /*
 * 依次加载模块
 */
-
-var load = function(path){
+function load(path){
     var data = fs.readFileSync(path, 'utf8');
-    var match = /require\((.*)\)/.exec(data);
+    var match = /require\(([^)]*)\)/.exec(data);
     var i;
     
     if(match) {
@@ -38,32 +48,76 @@ var load = function(path){
             }
         }
     }
-    requireMap[path] = data;
-}
-
-//console.log(requireList.length);
-
-for(var i=0; i<requireList.length; i++){
-    load(requireList[i]);
+    requireMap[path] = data.replace(/\/\/ *require\([^)]*\);? *(\r)?\n/, "");
 }
 
 /*
 * Print
 */
-var printMap = function(map) {
+function printMap(map) {
     for(i in map) {
         console.log(i);
     }
 }
-printMap(requireMap);
 
-/*
-* 构造输出文件内容
-*/
-var jsText = [];
-for(i in requireMap){
-    jsText.push(requireMap[i]);
+// 构建输出文件
+function build(file, text) {
+    text = text.replace(/window|document|true|false|null|undefined/ig, function(match){
+        switch(match.toLowerCase()) {
+            case "window":
+                return "W";
+                
+            case "document":
+                return "D";
+                
+            case "true":
+                return "T";
+                
+            case "false":
+                return "F";
+                
+            case "null":
+                return "N";
+                
+            case "undefined":
+                return "U";
+        }
+    });
+    
+    var base = fs.readFileSync(__dirname + '/base.js', 'utf8').replace("/*MAIN*/", text);
+    
+    fs.writeFileSync(file+'.js', base, 'utf8');
 }
-fs.writeFileSync(outFile+'.js', '(function(){\n' + jsText.join('\n\n') + '\n}())', 'utf8');
 
-exec('node node_modules/uglify-js/bin/uglifyjs ' + outFile + '.js -m -o ' + outFile + '.min.js');
+// 压缩
+function uglify(file) {
+    exec('node ' + __dirname + '/node_modules/uglifyjs/bin/uglifyjs ' + file + '.js -m -o ' + file + '.min.js');
+}
+
+
+
+(function() {
+    requireList = parsetModules(argv[2]);
+    
+    for(var i=0; i<requireList.length; i++){
+        load(requireList[i]);
+    }
+    
+    printMap(requireMap);
+    
+    /*
+    * 构造输出文件内容
+    */
+    var jsText = [];
+    for(i in requireMap){
+        console.log(requireMap[i]);
+        jsText.push(requireMap[i]);
+    }
+    build(outFile, jsText.join('\n\n'));
+
+    console.log('Uglify...');
+
+    uglify(outFile);
+
+    console.log('Done!');
+}());
